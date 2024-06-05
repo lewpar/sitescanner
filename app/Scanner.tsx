@@ -36,14 +36,14 @@ export default function Scanner() {
         .then((result) => result.json())
         .then(json => {
             setScanResults(JSON.parse(json.message));
+
+            setScanComplete(true);
+            setIsScanning(false);
+    
+            if(scanUrl !== "") {
+                setCanScan(true);
+            }
         });
-
-        setScanComplete(true);
-        setIsScanning(false);
-
-        if(scanUrl !== "") {
-            setCanScan(true);
-        }
     };
 
     let urlChanged = (event:any) => {
@@ -74,11 +74,14 @@ export default function Scanner() {
         </form>
         {isScanning ? <div>Scanning website..</div> : ""}
         {scanComplete ? 
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-2">
                 <p>Scan complete, here are your results:</p>
-                <p>X-Frame-Options: {scanResults.xFrameTest ? "Configured" : "Unconfigured"}</p>
-                <p>HSTS Policy: {scanResults.hstsTest ? "Configured" : "Unconfigured"}</p>
-                <p>Referrer Policy: {scanResults.referrerTest ? "Configured" : "Unconfigured"}</p>
+
+                <div>
+                <p>X-Frame-Options: {scanResults.xFrameTest ? <span className="text-green-500">Present</span> : <p className="text-red-500">Missing</p>}</p>
+                <p>HSTS Policy: {scanResults.hstsTest ? <span className="text-green-500">Present</span> : <p className="text-red-500">Missing</p>}</p>
+                <p>Referrer Policy: {scanResults.referrerTest ? <span className="text-green-500">Present</span> : <p className="text-red-500">Missing</p>}</p>
+                </div>
             </div> : ""}
     </div>
     </>
