@@ -16,7 +16,7 @@ export default function Scanner() {
     let [isScanning, setIsScanning] = useState(false);
     let [scanUrl, setScanUrl] = useState("");
 
-    let [scanComplete, setScanComplete] = useState(false);
+    let [isScanComplete, setIsScanComplete] = useState(false);
     let [scanResults, setScanResults] = useState({xFrameTest: false, hstsTest: false, referrerTest: false});
 
     let scanSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -26,7 +26,7 @@ export default function Scanner() {
             return;
         }
 
-        setScanComplete(false);
+        setIsScanComplete(false);
         setIsScanning(true);
         setCanScan(false);
 
@@ -37,7 +37,7 @@ export default function Scanner() {
         .then(json => {
             setScanResults(JSON.parse(json.message));
 
-            setScanComplete(true);
+            setIsScanComplete(true);
             setIsScanning(false);
     
             if(scanUrl !== "") {
@@ -73,7 +73,7 @@ export default function Scanner() {
             <button type="submit" className="nice-button" disabled={!canScan}>Scan</button>
         </form>
         {isScanning ? <div>Scanning website..</div> : ""}
-        {scanComplete ? 
+        {isScanComplete ? 
             <div className="flex flex-col gap-2">
                 <p>Scan complete, here are your results:</p>
 
