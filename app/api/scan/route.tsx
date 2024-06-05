@@ -7,9 +7,11 @@ async function scanUrl(url:string):Promise<Response> {
 export async function POST(req:NextRequest) {
     let url = await req.text();
 
-    if(!url.startsWith("http://") && !url.startsWith("https://")) {
-        console.log(`Missing scheme from url: ${url}`);
+    if(url === "") {
+        return NextResponse.json({ message: "You must supply a URL to scan." }, { status:400 });
+    }
 
+    if(!url.startsWith("http://") && !url.startsWith("https://")) {
         return NextResponse.json({ message: "URL must have a scheme: http(s)://" }, { status:400 });
     }
 
