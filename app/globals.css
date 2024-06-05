@@ -2,32 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100vh;
+    margin: 0;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+header {
+    display: flex;
+    flex-direction: column;
+
+    padding: 1rem;
+
+    color: white;
+    background-color: rgb(50, 50, 50);
+}
+
+main {
+    display: flex;
+    
+    flex: 1;
+
+    padding: 1rem;
+}
+
+footer {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    padding: 1rem;
+
+    color: white;
+    background-color: rgb(50, 50, 50);
+}
+
+/* CONTROLS */
+
+.nice-button {
+    border: 1px solid blue;
+    padding: 0.25rem;
+
+    color: white;
+    background-color: dodgerblue;
+
+    transition: background-color 0.25s;
+}
+.nice-button:hover {
+    background-color: #2777E8;
+}
+.nice-button:active {
+    background-color: #538FE2;
+}
+.nice-button:disabled {
+    border: 1px solid black;
+    color: #777777;
+    background-color: #ADADAD;
+}
+
+.nice-field {
+    border: 1px solid black;
+    padding: 0.25rem;
 }
