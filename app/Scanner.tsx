@@ -19,6 +19,9 @@ export default function Scanner() {
     let [isScanComplete, setIsScanComplete] = useState(false);
     let [scanResults, setScanResults] = useState({xFrameTest: false, hstsTest: false, referrerTest: false});
 
+    let [hasScanError, setHasScanError] = useState(false);
+    let [scanError, setScanError] = useState("");
+
     let scanSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
@@ -26,22 +29,47 @@ export default function Scanner() {
             return;
         }
 
+        setHasScanError(false);
+        setScanError("");
+
         setIsScanComplete(false);
         setIsScanning(true);
         setCanScan(false);
 
         console.log(`Scanning site: ${scanUrl}`);
 
-        scanWebsite(scanUrl).then(result => result.json()).then(json => {
-            setScanResults(JSON.parse(json.message));
+        let status = 0;
+        scanWebsite(scanUrl)
+            .then(response => {
+                status = response.status;
+                return response.json();
+            })
+            .then(json => {
+                if(status != 200) {
+                    throw new Error(json.message);
+                }
 
-            setIsScanComplete(true);
-            setIsScanning(false);
-    
-            if(scanUrl !== "") {
-                setCanScan(true);
-            }
-        });
+                console.log(json.tests);
+                setScanResults(json.tests);
+
+                setIsScanComplete(true);
+                setIsScanning(false);
+        
+                if(scanUrl !== "") {
+                    setCanScan(true);
+                }
+            })
+            .catch(error => {
+                setHasScanError(true);
+                setScanError(error.message);
+
+                setIsScanning(false);
+                setIsScanComplete(false);
+
+                if(scanUrl !== "") {
+                    setCanScan(true);
+                }
+            });
     };
 
     let urlChanged = (event:any) => {
@@ -81,6 +109,7 @@ export default function Scanner() {
                 <p>Referrer Policy: {scanResults.referrerTest ? <span className="text-green-500">Present</span> : <p className="text-red-500">Missing</p>}</p>
                 </div>
             </div> : ""}
+        {hasScanError ? <p className="text-red-500">{scanError}</p> : ""}
     </div>
     </>
 }

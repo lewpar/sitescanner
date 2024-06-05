@@ -1,39 +1,39 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-async function scanUrl(url:string) {
-    let result = await fetch(url);
-
-    return result;
+async function scanUrl(url:string):Promise<Response> {
+    return await fetch(url);
 }
 
 export async function POST(req:NextRequest) {
     let url = await req.text();
 
+    if(!url.startsWith("http://") && !url.startsWith("https://")) {
+        console.log(`Missing scheme from url: ${url}`);
+
+        return NextResponse.json({ message: "URL must have a scheme: http(s)://" }, { status:400 });
+    }
+
     console.log(url);
 
-    let result = await scanUrl(url)
+    let response:Response;
 
-    if(!result.ok) {
-        return new Response(
-            JSON.stringify({
-                status: 500
-            }),
-        );
+    try {
+        response = await scanUrl(url);
+    }
+    catch(_) {
+        return NextResponse.json({ message: "An internal error occured." }, { status:500 });
+    }
+
+    if(!response.ok) {
+        return NextResponse.json({ message: "An internal error occured." }, { status:500 });
     }
 
     // Tests
-    let xframe = result.headers.get('x-frame-options') == null ? false : true;
-    let hsts = result.headers.get('strict-transport-security') == null ? false : true;
-    let referrer = result.headers.get('referrer-policy') == null ? false : true;
+    let xframe = response.headers.get('x-frame-options') == null ? false : true;
+    let hsts = response.headers.get('strict-transport-security') == null ? false : true;
+    let referrer = response.headers.get('referrer-policy') == null ? false : true;
 
-    return new Response(
-        JSON.stringify({
-            status: 200,
-            message: JSON.stringify({
-            xFrameTest: xframe,
-            hstsTest: hsts,
-            referrerTest: referrer
-           }) 
-        }),
-    );
+    console.log("Tests complete!");
+
+    return NextResponse.json({ tests: { xFrameTest:xframe, hstsTest: hsts, referrerTest: referrer } }, { status:200 });
 }
