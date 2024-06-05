@@ -33,7 +33,7 @@ export default function Scanner() {
         console.log(`Scanning site: ${scanUrl}`);
 
         scanWebsite(scanUrl)
-        .then((result) => result.json())
+        .then(result => result.json())
         .then(json => {
             setScanResults(JSON.parse(json.message));
 
