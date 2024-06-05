@@ -90,7 +90,7 @@ export default function Scanner() {
 
     return <>
     <div className="flex-1">
-        <form onSubmit={scanSubmit} className="flex flex-col gap-1">
+        <form onSubmit={scanSubmit} method="POST" className="flex flex-col gap-1">
             <div className="flex flex-col gap-0.5">
                 <label htmlFor="url">Url</label>
                 <input type="text" name="url" onChange={urlChanged} className="nice-field"/>
