@@ -104,9 +104,9 @@ export default function Scanner() {
                 <p>Scan complete, here are your results:</p>
 
                 <div>
-                <p>X-Frame-Options: {scanResults.xFrameTest ? <span className="text-green-500">Present</span> : <p className="text-red-500">Missing</p>}</p>
-                <p>HSTS Policy: {scanResults.hstsTest ? <span className="text-green-500">Present</span> : <p className="text-red-500">Missing</p>}</p>
-                <p>Referrer Policy: {scanResults.referrerTest ? <span className="text-green-500">Present</span> : <p className="text-red-500">Missing</p>}</p>
+                <p>X-Frame-Options: {scanResults.xFrameTest ? <span className="text-green-500">Present</span> : <span className="text-red-500">Missing</span>}</p>
+                <p>HSTS Policy: {scanResults.hstsTest ? <span className="text-green-500">Present</span> : <span className="text-red-500">Missing</span>}</p>
+                <p>Referrer Policy: {scanResults.referrerTest ? <span className="text-green-500">Present</span> : <span className="text-red-500">Missing</span>}</p>
                 </div>
             </div> : ""}
         {hasScanError ? <p className="text-red-500">{scanError}</p> : ""}
