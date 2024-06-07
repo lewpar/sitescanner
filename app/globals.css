@@ -44,6 +44,8 @@ footer {
 
 .nice-button {
     border: 1px solid blue;
+    border-radius: 5px;
+
     padding: 0.25rem;
 
     color: white;
@@ -65,5 +67,7 @@ footer {
 
 .nice-field {
     border: 1px solid black;
+    border-radius: 5px;
+    
     padding: 0.25rem;
 }
