@@ -1,31 +1,31 @@
 import { ActionResult } from "@/app/common/ActionResult";
 import { NextRequest, NextResponse } from "next/server";
 
-async function scanUrl(url:string):Promise<Response> {
+async function scanUrl(url:string): Promise<Response> {
     return await fetch(url);
 }
 
-function isUrlValid(url: string): ActionResult {
+function validateUrl(url: string): ActionResult {
     if(url === "") {
-        return new ActionResult(false, "You must supply a URL to scan.");
+        return ActionResult.error("You must supply a URL to scan.");
     }
 
     if(!url.startsWith("http://") && !url.startsWith("https://")) {
-        return new ActionResult(false, "URL must have a scheme: http(s)://");
+        return ActionResult.error("URL must have a valid scheme: http(s)://");
     }
 
-    return new ActionResult(true, "");
+    return ActionResult.ok();
 }
 
 export async function POST(req:NextRequest) {
     let url = await req.text();
 
-    let result = isUrlValid(url);
+    let result = validateUrl(url);
     if(!result.ok) {
         return NextResponse.json({ message: result.message }, { status: 400 });
     }
 
-    let response:Response;
+    let response: Response;
 
     try {
         response = await scanUrl(url);
