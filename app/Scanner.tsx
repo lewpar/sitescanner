@@ -2,6 +2,21 @@
 
 import { FormEvent, useState } from "react";
 
+let test = {
+    xFrameTest: {
+        pass: false,
+        message: ""
+    }, 
+    hstsTest: {
+        pass: false,
+        message: ""
+    }, 
+    referrerTest: {
+        pass: false,
+        message: ""
+    }
+}
+
 async function scanWebsite(scanUrl: string) {
     let result = await fetch("/api/scan", {
         method: "POST",
@@ -17,7 +32,7 @@ export default function Scanner() {
     let [scanUrl, setScanUrl] = useState("");
 
     let [isScanComplete, setIsScanComplete] = useState(false);
-    let [scanResults, setScanResults] = useState({xFrameTest: {pass:false,message:""}, hstsTest: {pass:false,message:""}, referrerTest: {pass:false,message:""}});
+    let [scanResults, setScanResults] = useState(test);
 
     let [hasScanError, setHasScanError] = useState(false);
     let [scanError, setScanError] = useState("");
