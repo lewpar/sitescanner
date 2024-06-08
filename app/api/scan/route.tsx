@@ -17,6 +17,36 @@ function validateUrl(url: string): ActionResult {
     return ActionResult.ok();
 }
 
+function evalXFrameOptions(headers: Headers): ActionResult {
+    let xFrameHeader: (string | null) = headers.get('x-frame-options');
+
+    if(xFrameHeader == null) {
+        return ActionResult.error("No X-Frame-Options were found.");
+    }
+
+    return ActionResult.ok(`You have X-Frame-Options with the value '${xFrameHeader}'.`);
+}
+
+function evalHSTSPolicy(headers: Headers): ActionResult {
+    let hstsHeader: (string | null) = headers.get('strict-transport-security');
+
+    if(hstsHeader == null) {
+        return ActionResult.error("No Strict-Transport-Security Policy was found.");
+    }
+
+    return ActionResult.ok(`You have a Strict-Transport-Security Policy with the value '${hstsHeader}'.`);
+}
+
+function evalReferrerPolicy(headers: Headers): ActionResult {
+    let referrerHeader: (string | null) = headers.get('referrer-policy');
+
+    if(referrerHeader == null) {
+        return ActionResult.error("No Referrer-Policy was found.");
+    }
+
+    return ActionResult.ok(`You have a Referrer-Policy with the value '${referrerHeader}'.`);
+}
+
 export async function POST(req:NextRequest) {
     let url = await req.text();
 
@@ -43,10 +73,25 @@ export async function POST(req:NextRequest) {
         return NextResponse.json({ message: "Failed to scan URL." }, { status: 500 });
     }
 
-    // Tests
-    let xframe = response.headers.get('x-frame-options') == null ? false : true;
-    let hsts = response.headers.get('strict-transport-security') == null ? false : true;
-    let referrer = response.headers.get('referrer-policy') == null ? false : true;
+    let xFrameTest = evalXFrameOptions(response.headers);
+    let hstsTest = evalHSTSPolicy(response.headers);
+    let referrerTest = evalReferrerPolicy(response.headers);
 
-    return NextResponse.json({ tests: { xFrameTest:xframe, hstsTest: hsts, referrerTest: referrer } }, { status: 200 });
+    return NextResponse.json(
+        { 
+            tests: { 
+                xFrameTest: {
+                    pass: xFrameTest.ok,
+                    message: xFrameTest.message
+                },
+                hstsTest: {
+                    pass: hstsTest.ok,
+                    message: hstsTest.message
+                }, 
+                referrerTest: {
+                    pass: referrerTest.ok,
+                    message: referrerTest.message
+                }
+            } 
+        }, { status: 200 });
 }

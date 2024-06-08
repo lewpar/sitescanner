@@ -17,7 +17,7 @@ export default function Scanner() {
     let [scanUrl, setScanUrl] = useState("");
 
     let [isScanComplete, setIsScanComplete] = useState(false);
-    let [scanResults, setScanResults] = useState({xFrameTest: false, hstsTest: false, referrerTest: false});
+    let [scanResults, setScanResults] = useState({xFrameTest: {pass:false,message:""}, hstsTest: {pass:false,message:""}, referrerTest: {pass:false,message:""}});
 
     let [hasScanError, setHasScanError] = useState(false);
     let [scanError, setScanError] = useState("");
@@ -104,9 +104,21 @@ export default function Scanner() {
                 <p>Scan complete, here are your results:</p>
 
                 <div>
-                <p>X-Frame-Options: {scanResults.xFrameTest ? <span className="text-green-500">Present</span> : <span className="text-red-500">Missing</span>}</p>
-                <p>HSTS Policy: {scanResults.hstsTest ? <span className="text-green-500">Present</span> : <span className="text-red-500">Missing</span>}</p>
-                <p>Referrer Policy: {scanResults.referrerTest ? <span className="text-green-500">Present</span> : <span className="text-red-500">Missing</span>}</p>
+                    <p>
+                        X-Frame-Options: {scanResults.xFrameTest.pass ? 
+                        <span className="text-green-500">{scanResults.xFrameTest.message}</span> : 
+                        <span className="text-red-500">{scanResults.xFrameTest.message}</span>}
+                    </p>
+                    <p>
+                        HSTS Policy: {scanResults.hstsTest.pass ? 
+                        <span className="text-green-500">{scanResults.hstsTest.message}</span> : 
+                        <span className="text-red-500">{scanResults.hstsTest.message}</span>}
+                    </p>
+                    <p>
+                        Referrer Policy: {scanResults.referrerTest.pass ? 
+                        <span className="text-green-500">{scanResults.referrerTest.message}</span> : 
+                        <span className="text-red-500">{scanResults.referrerTest.message}</span>}
+                    </p>
                 </div>
             </div> : ""}
         {hasScanError ? <p className="text-red-500">{scanError}</p> : ""}
